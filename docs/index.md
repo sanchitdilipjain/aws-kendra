@@ -7,7 +7,7 @@
 - This tutorial will focus on below section
   
   - Deploy Kendra Index
-  - Ingestion Documents
+  - Ingesting Documents
   - Adding FAQs
 
 - Deploy Kendra Index
@@ -43,8 +43,10 @@
            <img src="images/image6.png" class="inline"/> 
         
         7. After the index has been deployed we will be able to move to the next step.
+        
+           <img src="images/image7.png" class="inline"/> 
 
-- Ingestion Document
+- Ingesting Document
 
     - There are 3 ways of ingesting documents to Amazon Kendra:
       - Connectors: S3, Salesforce, ServiceNow, RDS, Sharepoint, and, OneDrive
@@ -52,7 +54,72 @@
       - Using BatchPutDocument API that can take inline blobs and S3 locations for documents.
     - In this tutorial, we will index a set of AWS whitepapers in pdf format, these documents are persisted on separate directories within the archive depending on their category.
     - The dataset can be downloaded here: <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/AWS_Whitepapers.zip">AWS_Whitepapers.zip</a> 
+    - **Step 1 : Ingesting Documents Through The Kendra S3 Connector**
+        
+        1. Traverse to the <a href="https://console.aws.amazon.com/s3/">Amazon S3 console</a>
+  
+           <img src="images/image8.png" class="inline"/> 
+           
+        2. Create an S3 bucket to persist the documents and create the folder whitepapers
 
+           <img src="images/image9.png" class="inline"/>   
+           
+           <img src="images/image10.png" class="inline"/> 
+        
+        3. Download the zip folder <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/AWS_Whitepapers.zip">AWS_Whitepapers.zip</a>, Unzip it and upload it to S3 under whitepapers folder
+
+           <img src="images/image11.png" class="inline"/> 
+        
+        4. Post that go to the <a href="https://console.aws.amazon.com/kendra/">Amazon Kendra console</a>, go to your index and click on Datasources
+    
+           <img src="images/image12.png" class="inline"/> 
+        
+        5. Click S3 and click on Add Connector
+    
+           <img src="images/image13.png" class="inline"/> 
+        
+        6. Provide a name for connector and Select on Next
+    
+           <img src="images/image14.png" class="inline"/> 
+           
+        7. Provide the S3 bucket detail where you uploaded the documents
+    
+           <img src="images/image15.png" class="inline"/> 
+        
+        8. Under Additional configuration secction add the S3 folder where you uploaded the documents and click Add 
+    
+           <img src="images/image16.png" class="inline"/> 
+        
+        9. Select a New IAM Role and provide name for the new IAM role
+    
+           <img src="images/image17.png" class="inline"/> 
+           
+        10. Under Set sync run schedule Select Run on demand and click on Next
+    
+            <img src="images/image18.png" class="inline"/> 
+        
+        11. Click on Add data source, After the creation process is complete, click on Sync Now.
+    
+            <img src="images/image19.png" class="inline"/>
+            
+            <img src="images/image20.png" class="inline"/>
+            
+            <img src="images/image21.png" class="inline"/>
+            
+            <img src="images/image22.png" class="inline"/>
+            
+            <img src="images/image23.png" class="inline"/>
+        
+        12. Now navigate to Kendra’s built-in Search Console to test the queries. For example **what service has eleven nines of durability?**
+
+            <img src="images/image24.png" class="inline"/>
+            
+            <img src="images/image25.png" class="inline"/>
+    
+    - **Step 2 : Metadata Documents Through The Kendra S3 Connector**
+    
+    
+    - **Step 3 : Ingesting Documents Through The Kendra S3 Connector**
  
         
 
