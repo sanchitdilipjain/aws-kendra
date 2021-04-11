@@ -54,7 +54,6 @@
       - Using BatchPutDocument API that can take inline blobs and S3 locations for documents.
     - In this tutorial, we will index a set of AWS whitepapers in pdf format, these documents are persisted on separate directories within the archive depending on their category.
     - The dataset can be downloaded here: <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/AWS_Whitepapers.zip">AWS_Whitepapers.zip</a> 
-    - **Step 1 : Ingesting Documents Through The Kendra S3 Connector**
         
         1. Traverse to the <a href="https://console.aws.amazon.com/s3/">Amazon S3 console</a>
   
@@ -116,10 +115,14 @@
             
             <img src="images/image25.png" class="inline"/>
     
-    - **Step 2 : Metadata Documents Through The Kendra S3 Connector**
+ - Adding FAQs
     
-    
-    - **Step 3 : Ingesting Documents Through The Kendra S3 Connector**
- 
-        
+    - Amazon Kendra contains a deep learning model which look up precisely for frequently asked questions (FAQ) which are ingested as independent question-answer pairs. We can add questions and answers (FAQs) directly to the index using the console or the CreateFaq operation.
+    - FAQ is save in a file that we can persist in S3 bucket. It can we a comma-separated values (.csv) files or, JSON files.
+    - FAQ file can be downloaded here: <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/FAQ.csv">FAQ.csv</a> 
+       
+        1. Traverse to the <a href="https://console.aws.amazon.com/s3/">Amazon S3 console</a>
+  
+           <img src="images/image8.png" class="inline"/> 
+           
 
