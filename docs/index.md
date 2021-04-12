@@ -156,10 +156,12 @@
         10. Click “Add” and After the FAQ is created you will see a message like this
             
             <img src="images/image33.png" class="inline"/> 
+            
+            <img src="images/image34.png" class="inline"/>  
         
         11. Now navigate to Kendra’s built-in Search Console to test the queries. For example **What is the AWS Well-Architected Framework?**
 
             <img src="images/image24.png" class="inline"/>
             
-            <img src="images/image34.png" class="inline"/>  
+            <img src="images/image35.png" class="inline"/>  
 
