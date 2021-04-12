@@ -85,7 +85,7 @@
     
            <img src="images/image15.png" class="inline"/> 
         
-        8. Under Additional configuration secction add the S3 folder where you uploaded the documents and click Add 
+        8. Under Additional configuration secction add the S3 folder where we uploaded the documents and click Add 
     
            <img src="images/image16.png" class="inline"/> 
         
@@ -124,5 +124,42 @@
         1. Traverse to the <a href="https://console.aws.amazon.com/s3/">Amazon S3 console</a>
   
            <img src="images/image8.png" class="inline"/> 
+        
+        2. Create a folder in the S3 bucket called faqs and upload the csv file.
+  
+           <img src="images/image26.png" class="inline"/> 
+        
+        3. Post that go to the <a href="https://console.aws.amazon.com/kendra/">Amazon Kendra console</a>, go to your index and click on FAQs
+    
+           <img src="images/image27.png" class="inline"/> 
+        
+        4. Select FAQ
+  
+           <img src="images/image28.png" class="inline"/> 
+        
+        5. Provide name for the new FAQ
+  
+           <img src="images/image29.png" class="inline"/> 
+        
+        6. Provide the FAQ file type i.e .csv file - Custom
+    
+           <img src="images/image30.png" class="inline"/> 
+        
+        7. Provide the S3 bucket detail where we uploaded the FAQ file
+  
+           <img src="images/image31.png" class="inline"/> 
            
+        8. Select a New IAM Role and provide name for the new IAM role   
+           
+           <img src="images/image32.png" class="inline"/> 
+           
+        10. Click “Add” and After the FAQ is created you will see a message like this
+            
+            <img src="images/image33.png" class="inline"/> 
+        
+        11. Now navigate to Kendra’s built-in Search Console to test the queries. For example **What is the AWS Well-Architected Framework?**
+
+            <img src="images/image24.png" class="inline"/>
+            
+            <img src="images/image34.png" class="inline"/>  
 
