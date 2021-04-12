@@ -65,7 +65,7 @@
            
            <img src="images/image10.png" class="inline"/> 
         
-        3. Download the zip folder <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/AWS_Whitepapers.zip">AWS_Whitepapers.zip</a>, Unzip it and upload it to S3 under whitepapers folder
+        3. Download the zip folder <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/AWS_Whitepapers.zip">AWS_Whitepapers.zip</a>, Unzip it and upload it to S3 under the whitepapers folder
 
            <img src="images/image11.png" class="inline"/> 
         
@@ -85,11 +85,11 @@
     
            <img src="images/image15.png" class="inline"/> 
         
-        8. Under Additional configuration secction add the S3 folder where we uploaded the documents and click Add 
+        8. Under the Additional configuration secction add the S3 folder where we uploaded the documents and click Add 
     
            <img src="images/image16.png" class="inline"/> 
         
-        9. Select a New IAM Role and provide name for the new IAM role
+        9. Select a New IAM Role and provide the name for the new IAM role
     
            <img src="images/image17.png" class="inline"/> 
            
@@ -117,8 +117,8 @@
     
  - Adding FAQs
     
-    - Amazon Kendra contains a deep learning model which look up precisely for frequently asked questions (FAQ) which are ingested as independent question-answer pairs. We can add questions and answers (FAQs) directly to the index using the console or the CreateFaq operation.
-    - FAQ is save in a file that we can persist in S3 bucket. It can we a comma-separated values (.csv) files or, JSON files.
+    - Amazon Kendra contains a deep learning model that lookup precisely for frequently asked questions (FAQ) which are ingested as independent question-answer pairs. We can add questions and answers (FAQs) directly to the index using the console or the CreateFaq operation.
+    - FAQ is saved in a file that we can persist in the S3 bucket. It can we a comma-separated values (.csv) files or, JSON files.
     - FAQ file can be downloaded here: <a href="https://github.com/sanchitdilipjain/aws-kendra/blob/main/FAQ.csv">FAQ.csv</a> 
        
         1. Traverse to the <a href="https://console.aws.amazon.com/s3/">Amazon S3 console</a>
