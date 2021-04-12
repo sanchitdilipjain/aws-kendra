@@ -161,7 +161,5 @@
         
         11. Now navigate to Kendra’s built-in Search Console to test the queries. For example **What is the AWS Well-Architected Framework?**
 
-            <img src="images/image24.png" class="inline"/>
-            
             <img src="images/image35.png" class="inline"/>  
 
