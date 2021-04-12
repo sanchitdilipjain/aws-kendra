@@ -130,9 +130,7 @@
            <img src="images/image26.png" class="inline"/> 
         
         3. Post that go to the <a href="https://console.aws.amazon.com/kendra/">Amazon Kendra console</a>, go to your index and click on FAQs
-    
-           <img src="images/image27.png" class="inline"/> 
-        
+            
         4. Select FAQ
   
            <img src="images/image28.png" class="inline"/> 
