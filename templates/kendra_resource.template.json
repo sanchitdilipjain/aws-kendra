@@ -1,0 +1,295 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "A Cloudformation template to create Kendra resources",
+    "Parameters": {
+        "S3KeyPrefix": {
+            "Type": "String"
+        },
+        "KendraS3BucketName": {
+            "Type": "String"
+        },
+        "KendraIndexName": {
+            "Type": "String"
+        },
+        "KendraIndexEdition": {
+            "Type": "String",
+            "AllowedValues": [
+                "DEVELOPER_EDITION",
+                "ENTERPRISE_EDITION"
+            ],
+            "Default": "DEVELOPER_EDITION"
+        },
+        "KendraDataSourceName": {
+            "Type": "String"
+        },
+        "KendraFAQName": {
+            "Type": "String"
+        },
+        "KendraFAQFileKey": {
+            "AllowedPattern": "^.*.csv$",
+            "Description": "The file where FAQs are stored for the Kendra Index",
+            "Type": "String"
+        },
+        "ArtifactsS3BucketName": {
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "KendraIndexIAMRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com",
+                                    "kendra.amazonaws.com",
+                                    "s3.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "KendraIndexIAMPolicy": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            {
+                                "Ref": "KendraIndexIAMRole"
+                            },
+                            "_policy"
+                        ]
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "KendraIndexIAMRole"
+                    }
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Resource": [
+                                "arn:aws:logs:*:*:*"
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:GetObject",
+                                "s3:ListBucket",
+                                "s3:HeadBucket"
+                            ],
+                            "Resource": [
+                                {
+                                    "Fn::Sub": "arn:aws:s3:::${ArtifactsS3BucketName}"
+                                },
+                                "arn:aws:s3:*:*:accesspoint/*",
+                                {
+                                    "Fn::Sub": "arn:aws:s3:::${ArtifactsS3BucketName}/*"
+                                },
+                                {
+                                    "Fn::Sub": "arn:aws:s3:::${KendraS3BucketName}"
+                                },
+                                {
+                                    "Fn::Sub": "arn:aws:s3:::${KendraS3BucketName}/*"
+                                }
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "kendra:DeleteIndex",
+                                "kendra:CreateDataSource",
+                                "kendra:DescribeIndex",
+                                "kendra:CreateIndex",
+                                "kendra:StartDataSourceSyncJob",
+                                "kendra:CreateFaq",
+                                "kendra:TagResource",
+                                "kendra:UntagResource"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "iam:GetRole",
+                                "iam:PassRole"
+                            ],
+                            "Resource": [
+                                {
+                                    "Fn::GetAtt": [
+                                        "KendraIndexIAMRole",
+                                        "Arn"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "lambda:InvokeFunction",
+                                "lambda:AddPermission",
+                                "lambda:RemovePermission"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "events:PutRule",
+                                "events:DeleteRule",
+                                "events:PutTargets",
+                                "events:RemoveTargets"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "KendraOperationsFunction": {
+            "DependsOn": [
+                "KendraIndexIAMPolicy"
+            ],
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Layers": [
+                    {
+                        "Ref": "CrHelperLayer"
+                    }
+                ],
+                "Runtime": "python3.6",
+                "Timeout": 900,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "KendraIndexIAMRole",
+                        "Arn"
+                    ]
+                },
+                "MemorySize": 256,
+                "Handler": "kendra_custom_resource.lambda_handler",
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "ArtifactsS3BucketName"
+                    },
+                    "S3Key": {
+                        "Fn::Sub": "${S3KeyPrefix}kendra_custom_resource.zip"
+                    }
+                },
+                "Description": "Lambda backed Custom Resource for Kendra Index Operations"
+            }
+        },
+        "CrHelperLayer": {
+            "Type": "AWS::Lambda::LayerVersion",
+            "Properties": {
+                "CompatibleRuntimes": [
+                    "python3.6",
+                    "python3.7"
+                ],
+                "Content": {
+                    "S3Bucket": {
+                        "Ref": "ArtifactsS3BucketName"
+                    },
+                    "S3Key": {
+                        "Fn::Sub": "${S3KeyPrefix}lambda_layers.zip"
+                    }
+                }
+            }
+        },
+        "KendraCustomResource": {
+            "Type": "Custom::KendraCustomResource",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "KendraOperationsFunction",
+                        "Arn"
+                    ]
+                },
+                "IndexRoleArn": {
+                    "Fn::GetAtt": [
+                        "KendraIndexIAMRole",
+                        "Arn"
+                    ]
+                },
+                "IndexName": {
+                    "Ref": "KendraIndexName"
+                },
+                "Edition": {
+                    "Ref": "KendraIndexEdition"
+                },
+                "DataSourceName": {
+                    "Ref": "KendraDataSourceName"
+                },
+                "KendraS3Bucket": {
+                    "Ref": "KendraS3BucketName"
+                },
+                "DataSourceRoleArn": {
+                    "Fn::GetAtt": [
+                        "KendraIndexIAMRole",
+                        "Arn"
+                    ]
+                },
+                "FAQName": {
+                    "Ref": "KendraFAQName"
+                },
+                "FAQRoleArn": {
+                    "Fn::GetAtt": [
+                        "KendraIndexIAMRole",
+                        "Arn"
+                    ]
+                },
+                "FAQFileKey": {
+                    "Ref": "KendraFAQFileKey"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "LambdaFunctionARN": {
+            "Description": "ARN of Lambda Function used for Kendra Index Custom Resource Operations",
+            "Value": {
+                "Fn::GetAtt": [
+                    "KendraOperationsFunction",
+                    "Arn"
+                ]
+            }
+        },
+        "KendraIndexID": {
+            "Description": "Index ID for the Kendra Index",
+            "Value": {
+                "Fn::GetAtt": [
+                    "KendraCustomResource",
+                    "KendraIndexId"
+                ]
+            },
+            "Export": {
+                "Name": "KendraIndexID"
+            }
+        }
+    }
+}
